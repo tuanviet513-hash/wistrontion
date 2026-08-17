@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <meta name="theme-color" content="white">
+  <title>二维码通行</title>
+  
+  <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+  <link rel="apple-touch-icon" href="icon.png">
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background-color: #1a1c29;
+      background-image: url("background.png");
+        radial-gradient(circle at 50% 30%, rgba(35, 43, 85, 0.6) 0%, transparent 70%),
+        linear-gradient(135deg, #181a26 0%, #10121a 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "SECURITY";
+      position: absolute;
+      bottom: 12%;
+      font-size: 52px;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.03);
+      letter-spacing:6px;
+      transform: rotate(-15deg) skewX(20deg);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* Mã & Tên nhân viên */
+    .employee-info {
+      margin-top: 45px;
+      font-size: 19px;
+      font-weight: 500;
+      color: #c5ba97;
+      letter-spacing: 0.3px;
+    }
+
+    /* Thẻ chứa mã QR - Đã thu nhỏ kích thước tổng thể */
+    .card {
+      margin-top: 16px;
+      width: 79%;
+      max-width: 280px;
+      background: #f4c540;
+      border-radius:6px;
+      overflow: hidden;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.015);
+      position: relative;
+    }
+
+    /* Tiêu đề màu vàng của thẻ */
+    .card-header {
+      background-color: #f0bd38;
+      padding: 12px 10px;
+      text-align: center;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      position: relative;
+    }
+
+    /* Thân thẻ trắng - Thu nhỏ padding và bỏ hoàn toàn họa tiết nền */
+    .card-body {
+      padding: 16px 12px 14px 12px;
+      text-align: center;
+      color: #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      background-color: #ffffff;
+    }
+
+    /* Vết khuyết mép trên tiếp giáp màu vàng */
+    .notch {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background-color:rgb(61, 62, 82);
+      border-radius: 100%;
+      z-index: 10;
+    }
+    .notch-top-left { top: 35px; left: -7px; }
+    .notch-top-right { top: 35px; right: -7px; }
+
+    /* Thời gian hiển thị */
+    .time-display {
+      font-size: 14px;
+      font-weight:600;
+      color: #111111;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mã QR - Đã phóng to kích thước */
+    #qrcode {
+      margin: 0 auto;
+    }
+
+    #qrcode img {
+      width: 230px !important;
+      height: 230px !important;
+    }
+
+    /* Dòng Refresh */
+    .refresh-btn {
+      margin-top: 10px;
+      font-size: 13.5px;
+      color: #333333;
+      cursor: pointer;
+    }
+
+    /* Trạng thái & Đếm ngược */
+    .status-box {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .status-text {
+      font-size: 10px;
+      color: rgba(0, 180, 90, 0.25);
+    }
+
+    .countdown {
+      font-size: 14px;
+      font-weight: 700;
+      color: #00cc66;
+      margin-top: 2px;
+    }
+
+    /* Dòng cảnh báo bên dưới */
+    .warning-note {
+      margin-top: 24px;
+      width: 80%;
+      max-width: 300px;
+      font-size: 12px;
+      color: #c5ba97;
+      line-height: 1.65;
+      text-align: justify;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Thông tin nhân viên -->
+  <div class="employee-info">V25071461 (Nguyễn Tuấn Việt)</div>
+
+  <!-- Thẻ chính chứa QR -->
+  <div class="card">
+    <!-- Vết khuyết mép trên -->
+    <div class="notch notch-top-left"></div>
+    <div class="notch notch-top-right"></div>
+
+    <div class="card-header">
+      将二维码对准扫描器刷码出场
+    </div>
+
+    <div class="card-body">
+      <!-- Nội dung thẻ -->
+      <div class="time-display" id="currentTime">--</div>
+      
+      <div id="qrcode"></div>
+      
+      <div class="refresh-btn" onclick="resetQRCode()">刷新二维码</div>
+      
+      <div class="status-box">
+        <div class="status-text">已生效</div>
+        <div class="countdown" id="countdown">00:12</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cảnh báo bảo mật -->
+  <div class="warning-note">
+    尊敬的员工您好，您已进入企业涉密区域，出于企业安全考虑，您的手机摄像头将被禁止拍摄，感谢您的配合。
+  </div>
+
+ <script>
+
+    let qrCodeInstance = null;
+
+    const MAX_SECONDS = 12 * 3600;
+
+    let timerValue = 0;
+
+    let countTimer = null;
+
+
+    /* ================================
+       FORMAT NUMBER
+    ================================= */
+
+    function pad(num) {
+        return num < 10 ? "0" + num : String(num);
+    }
+
+
+    /* ================================
+       HIỂN THỊ NGÀY GIỜ
+    ================================= */
+
+    function updateTime() {
+
+        const now = new Date();
+
+        const year = now.getFullYear();
+
+        const month = now.getMonth() + 1;
+
+        const day = now.getDate();
+
+        const hours = pad(now.getHours());
+
+        const minutes = pad(now.getMinutes());
+
+        const seconds = pad(now.getSeconds());
+
+
+        const formatted =
+            `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+
+        const timeElement =
+            document.getElementById("currentTime");
+
+
+        if (timeElement) {
+            timeElement.textContent = formatted;
+        }
+
+    }
+
+
+    /* ================================
+       COUNTDOWN
+    ================================= */
+
+    function updateTimerDisplay() {
+
+        const hours =
+            pad(Math.floor(timerValue / 3600));
+
+        const minutes =
+            pad(Math.floor((timerValue % 3600) / 60));
+
+        const seconds =
+            pad(timerValue % 60);
+
+
+        const countdown =
+            document.getElementById("countdown");
+
+
+        if (countdown) {
+
+            countdown.textContent =
+                `${hours}:${minutes}:${seconds}`;
+
+        }
+
+    }
+
+
+    /* ================================
+       START COUNTDOWN
+    ================================= */
+
+    function startTimer() {
+
+        clearInterval(countTimer);
+    // Bắt đầu chính xác từ 00:00
+        timerValue = 0;
+
+        updateTimerDisplay();
+    // Hiển thị 00:00 ngay lập tức
+
+        countTimer = setInterval(function () {
+
+            timerValue++;
+
+
+            if (timerValue >= MAX_SECONDS) {
+
+                generateQRCode();
+
+                return;
+
+            }
+
+
+            updateTimerDisplay();
+
+        }, 1000);
+
+    }
+
+
+    /* ================================
+       TẠO QR CODE
+    ================================= */
+
+    function generateQRCode() {
+
+        const now = new Date();
+
+
+        const year =
+            now.getFullYear();
+
+        const month =
+            now.getMonth() + 1;
+
+        const day =
+            now.getDate();
+
+        const hours =
+            pad(now.getHours());
+
+        const minutes =
+            pad(now.getMinutes());
+
+        const seconds =
+            pad(now.getSeconds());
+
+
+        /*
+         * Thời gian hiển thị trên giao diện
+         */
+
+        const displayTime =
+            `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+
+        document.getElementById("currentTime")
+            .textContent = displayTime;
+
+
+        /*
+         * Thông tin nhân viên
+         */
+
+        const employeeId =
+            "V25071461";
+
+        const employeeName =
+            "Nguyễn Tuấn Việt";
+
+
+        /*
+         * Token mới
+         */
+
+        const token =
+            Math.random()
+                .toString(36)
+                .substring(2)
+            +
+            Date.now()
+                .toString(36);
+
+
+        /*
+         * Dữ liệu QR
+         */
+
+        const payload =
+            `https://Wistron.com/access` +
+            `?id=${encodeURIComponent(employeeId)}` +
+            `&name=${encodeURIComponent(employeeName)}` +
+            `&time=${encodeURIComponent(displayTime)}` +
+            `&token=${token}`;
+
+
+        /*
+         * QR container
+         */
+
+        const container =
+            document.getElementById("qrcode");
+
+
+        container.innerHTML = "";
+
+
+        qrCodeInstance =
+            new QRCode(container, {
+
+                text: payload,
+
+                width: 215,
+
+                height: 215,
+
+                colorDark: "#000000",
+
+                colorLight: "#ffffff",
+
+                correctLevel:
+                    QRCode.CorrectLevel.H
+
+            });
+
+
+        /*
+         * Reset countdown
+         */
+
+        startTimer();
+
+    }
+
+
+    /* ================================
+       REFRESH QR
+    ================================= */
+
+    function resetQRCode() {
+
+        generateQRCode();
+
+    }
+
+
+    /* ================================
+       KHỞI ĐỘNG
+    ================================= */
+
+    updateTime();
+
+    generateQRCode();
+
+
+    /*
+     * Quan trọng:
+     * Dùng updateTime(), KHÔNG dùng updateRealTime()
+     */
+
+    setInterval(
+        updateTime,
+        1000
+    );
+
+</script>
+</body>
+
+</html>
