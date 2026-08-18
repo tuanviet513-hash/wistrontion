@@ -4,8 +4,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+    <!-- Cấu hình thanh trạng thái iOS màu trắng (cho Web App) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Cấu hình màu nền cho iOS Safari & Android Chrome -->
+    <meta name="theme-color" content="#1a1b26">
+
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
     <link rel="apple-touch-icon" href="icon.png">
     <title>二维码通行</title>
@@ -16,6 +22,7 @@
 
         html {
             background-color: #1a1b26;
+            color-scheme: dark; /* Báo cho iOS/Trình duyệt ưu tiên thanh trạng thái chữ/biểu tượng màu trắng */
         }
 
         body {
@@ -34,17 +41,17 @@
         }
 
         .header {
-            margin-top: 40px;
-            font-size: 19px;
+            margin-top: 30px;
+            font-size: 17px;
             color: #edd185;
             font-weight: 400;
             letter-spacing: 0.5px;
         }
 
         .card {
-            margin-top: 25px;
+            margin-top: 20px;
             width: 82%;
-            max-width: 360px;
+            max-width: 310px;
             background: #fff;
             border-radius: 8px;
             overflow: hidden;
@@ -53,23 +60,23 @@
 
         .card-header {
             background-color: #f1bf42;
-            padding: 18px 12px;
+            padding: 12px 10px;
             text-align: center;
             color: white;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 500;
         }
 
         .card-body {
-            padding: 20px 16px;
+            padding: 12px 10px;
             text-align: center;
             color: #000;
             position: relative;
         }
 
         .time {
-            font-size: 16px;
-            margin-bottom: 12px;
+            font-size: 14px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: #000;
             letter-spacing: 0.5px;
@@ -77,22 +84,22 @@
 
         #qrcode {
             margin: auto;
-            width: 220px;
-            height: 220px;
+            width: 250px;
+            height: 250px;
             image-rendering: pixelated;
         }
 
         #qrcode img {
-            width: 220px;
-            height: 220px;
+            width: 250px;
+            height: 250px;
         }
 
         .refresh {
-            margin-top: 15px;
+            margin-top: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 12px;
             color: #333;
         }
 
@@ -104,9 +111,9 @@
         }
 
         .status-wrapper {
-            margin-top: 10px;
+            margin-top: 4px;
             position: relative;
-            height: 50px;
+            height: 38px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -115,7 +122,7 @@
 
         .status-bg {
             position: absolute;
-            font-size: 20px;
+            font-size: 18px;
             color: #f5f5f5;
             font-weight: bold;
             z-index: 1;
@@ -126,15 +133,15 @@
             position: relative;
             z-index: 2;
             color: #00cc66;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
         }
 
         .note {
-            margin: 35px 10%;
-            font-size: 13.5px;
+            margin: 25px 10%;
+            font-size: 12.5px;
             color: #d1c095;
-            line-height: 1.6;
+            line-height: 1.5;
             text-align: justify;
             text-justify: inter-ideograph;
         }
@@ -146,21 +153,21 @@
         .circle1 {
             position: absolute;
             background-color: #26273b;
-            height: 12px;
-            width: 12px;
-            left: -6px;
+            height: 10px;
+            width: 10px;
+            left: -5px;
             border-radius: 50%;
-            bottom: -6px;
+            bottom: -5px;
         }
 
         .circle2 {
             position: absolute;
             background-color: #26273b;
-            height: 12px;
-            width: 12px;
-            right: -6px;
+            height: 10px;
+            width: 10px;
+            right: -5px;
             border-radius: 50%;
-            bottom: -6px;
+            bottom: -5px;
         }
     </style>
 </head>
@@ -209,7 +216,6 @@
         function updateTimer() {
             totalSeconds++;
             
-            // Tối đa 12 giờ
             if (totalSeconds > 43200) {
                 totalSeconds = 43200;
             }
@@ -218,8 +224,6 @@
             const mins = Math.floor((totalSeconds % 3600) / 60);
             const secs = totalSeconds % 60;
 
-            // Nếu dưới 60 phút (3600 giây): hiển thị mm:ss
-            // Nếu từ 60 phút trở lên: thêm cột giờ HH:mm:ss
             if (totalSeconds < 3600) {
                 document.getElementById('countdown').textContent = `${pad(mins)}:${pad(secs)}`;
             } else {
@@ -232,7 +236,6 @@
                 event.currentTarget.blur();
             }
 
-            // Reset bộ đếm về 00:00 khi bấm nút làm mới
             totalSeconds = 0;
             document.getElementById('countdown').textContent = "00:00";
 
@@ -258,8 +261,8 @@
             } else {
                 qrCodeInstance = new QRCode(qrcodeElement, {
                     text: accessData,
-                    width: 220,
-                    height: 220,
+                    width: 250,
+                    height: 250,
                     colorDark: "#000000",
                     colorLight: "#ffffff",
                     correctLevel: QRCode.CorrectLevel.H
