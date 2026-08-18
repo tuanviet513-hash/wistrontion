@@ -3,10 +3,9 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no " />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
     <link rel="apple-touch-icon" href="icon.png">
     <title>二维码通行</title>
@@ -16,13 +15,14 @@
         }
 
         html {
-            background-color: #000;
+            background-color: #1a1b26;
         }
 
         body {
             margin: 0;
-            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
             background-image: url("background.png");
+            background-color: #1d1d2b;
             background-repeat: no-repeat;
             color: white;
             display: flex;
@@ -35,41 +35,44 @@
 
         .header {
             margin-top: 40px;
-            font-size: 18px;
-            color: #E4BE5D;
+            font-size: 19px;
+            color: #edd185;
+            font-weight: 400;
+            letter-spacing: 0.5px;
         }
 
         .card {
-            margin-top: 20px;
-            width: fit-content;
-            min-width: 260px;
+            margin-top: 25px;
+            width: 82%;
+            max-width: 360px;
             background: #fff;
-            border-radius: 5px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .card-header {
-            background-color: #3bb561;
-            padding: 10px 8px;
+            background-color: #f1bf42;
+            padding: 18px 12px;
             text-align: center;
             color: white;
-            font-size: 14px;
-        }
-
-        .card-header p {
-            margin: 0;
+            font-size: 15px;
+            font-weight: 500;
         }
 
         .card-body {
-            padding: 10px;
+            padding: 20px 16px;
             text-align: center;
             color: #000;
+            position: relative;
         }
 
         .time {
-            font-size: 14px;
-            margin-bottom: 8px;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #000;
+            letter-spacing: 0.5px;
         }
 
         #qrcode {
@@ -79,66 +82,86 @@
             image-rendering: pixelated;
         }
 
+        #qrcode img {
+            width: 220px;
+            height: 220px;
+        }
+
         .refresh {
+            margin-top: 15px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 12px;
-            font-size: 10px;
+            justify-content: center;
+            font-size: 13px;
             color: #333;
-            margin-top: 8px;
         }
 
         .refresh-title {
             cursor: pointer;
             margin: 0;
+            padding: 0 10px;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Đồng hồ đếm màu xanh */
-        .status {
-            margin-top: 12px;
-            margin-bottom: 4px;
-            color: #2bd870;
-            font-size: 10px;
-            font-weight: 500;
+        .status-wrapper {
+            margin-top: 10px;
+            position: relative;
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-bg {
+            position: absolute;
+            font-size: 20px;
+            color: #f5f5f5;
+            font-weight: bold;
+            z-index: 1;
+            user-select: none;
+        }
+
+        .status-timer {
+            position: relative;
+            z-index: 2;
+            color: #00cc66;
+            font-size: 18px;
+            font-weight: bold;
         }
 
         .note {
-            margin: 30px 10%;
-            font-size: 12px;
-            color: #e5d8b7;
-            line-height: 1.7;
-            text-align: -webkit-left;
-            text-indent: 1.5em;
-        }
-
-        .bottom-bar {
-            width: 100%;
-            height: 4px;
-            background-color: transparent;
-        }
-
-        img {
-            width: 230px;
-            height: 230px;
+            margin: 35px 10%;
+            font-size: 13.5px;
+            color: #d1c095;
+            line-height: 1.6;
+            text-align: justify;
+            text-justify: inter-ideograph;
         }
 
         .relative {
             position: relative;
         }
 
-        .circle1, .circle2 {
+        .circle1 {
             position: absolute;
-            background-color: rgb(61, 62, 82);
+            background-color: #26273b;
             height: 12px;
             width: 12px;
+            left: -6px;
             border-radius: 50%;
             bottom: -6px;
         }
 
-        .circle1 { left: -6px; }
-        .circle2 { right: -6px; }
+        .circle2 {
+            position: absolute;
+            background-color: #26273b;
+            height: 12px;
+            width: 12px;
+            right: -6px;
+            border-radius: 50%;
+            bottom: -6px;
+        }
     </style>
 </head>
 
@@ -146,7 +169,7 @@
     <div class="header">V25071461(Nguyễn Tuấn Việt)</div>
     <div class="card">
         <div class="card-header relative">
-            <p>将二维码对准扫描器刷码进场</p>
+            <p style="margin: 0;">将二维码对准扫描器刷码出场</p>
             <div class="circle1"></div>
             <div class="circle2"></div>
         </div>
@@ -155,23 +178,23 @@
             <div class="time" id="currentTime">--</div>
             <div id="qrcode"></div>
             <div class="refresh">
-                <span>申请离场</span>
-                <span onclick="generateQRCode(event)" class="refresh-title">刷新二维码</span>
+                <p onclick="generateQRCode(event)" class="refresh-title">刷新二维码</p>
             </div>
-            <!-- Bộ đếm thời gian bắt đầu từ 00:00 -->
-            <div class="status" id="timer">00:00</div>
+            
+            <div class="status-wrapper">
+                <div class="status-bg">已生效</div>
+                <div class="status-timer" id="countdown">00:00</div>
+            </div>
         </div>
     </div>
+
     <div class="note">
         尊敬的员工您好，您已进入企业涉密区域，出于企业安全考虑，您的手机摄像头将被禁止拍摄，感谢您的配合。
     </div>
-    <div class="bottom-bar"></div>
 
     <script>
         let qrCodeInstance;
-        let countTimer;
-        let totalSeconds = 0; // Biến tính tổng số giây
-        const maxSeconds = 12 * 3600; // Giới hạn dừng lại ở 12:00:00
+        let totalSeconds = 0;
 
         function pad(num) {
             return num < 10 ? '0' + num : num;
@@ -179,41 +202,29 @@
 
         function updateTime() {
             const now = new Date();
-            const formatted = `${now.getFullYear()}-${now.getMonth() + 1}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const formatted = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
             document.getElementById('currentTime').textContent = formatted;
         }
 
-        // Định dạng thời gian linh hoạt (MM:SS hoặc HH:MM:SS)
-        function formatTimerDisplay(sec) {
-            const hrs = Math.floor(sec / 3600);
-            const mins = Math.floor((sec % 3600) / 60);
-            const secs = sec % 60;
-
-            if (hrs > 0) {
-                // Từ 1 giờ trở lên -> HH:MM:SS (VD: 01:00:00)
-                return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-            } else {
-                // Dưới 1 giờ -> MM:SS (VD: 00:00 đến 59:59)
-                return `${pad(mins)}:${pad(secs)}`;
-            }
-        }
-
-        // Bắt đầu đếm thời gian từ 00:00
-        function startCountUp() {
-            clearInterval(countTimer);
-            totalSeconds = 0;
+        function updateTimer() {
+            totalSeconds++;
             
-            const timerEl = document.getElementById('timer');
-            timerEl.textContent = formatTimerDisplay(totalSeconds);
+            // Tối đa 12 giờ
+            if (totalSeconds > 43200) {
+                totalSeconds = 43200;
+            }
 
-            countTimer = setInterval(() => {
-                if (totalSeconds < maxSeconds) {
-                    totalSeconds++;
-                    timerEl.textContent = formatTimerDisplay(totalSeconds);
-                } else {
-                    clearInterval(countTimer); // Dừng lại khi chạm 12:00:00
-                }
-            }, 1000);
+            const hrs = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = totalSeconds % 60;
+
+            // Nếu dưới 60 phút (3600 giây): hiển thị mm:ss
+            // Nếu từ 60 phút trở lên: thêm cột giờ HH:mm:ss
+            if (totalSeconds < 3600) {
+                document.getElementById('countdown').textContent = `${pad(mins)}:${pad(secs)}`;
+            } else {
+                document.getElementById('countdown').textContent = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+            }
         }
 
         function generateQRCode(event) {
@@ -221,14 +232,25 @@
                 event.currentTarget.blur();
             }
 
+            // Reset bộ đếm về 00:00 khi bấm nút làm mới
+            totalSeconds = 0;
+            document.getElementById('countdown').textContent = "00:00";
+
             const now = new Date();
-            const formattedTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hours = pad(now.getHours());
+            const minutes = pad(now.getMinutes());
+            const seconds = pad(now.getSeconds());
+            const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
             const employeeId = "V25071461";
             const employeeName = "Nguyễn Tuấn Việt";
             const uniqueToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
-            const accessData = `https://Wistron.com/access?id=${employeeId}&name=${encodeURIComponent(employeeName)}&time=${encodeURIComponent(formattedTime)}&token=${uniqueToken}`;
-            
+            const accessData =
+                `https://Wistron.com/access?id=${employeeId}&name=${encodeURIComponent(employeeName)}&time=${encodeURIComponent(formattedTime)}&token=${uniqueToken}`;
+
             const qrcodeElement = document.getElementById('qrcode');
             if (qrCodeInstance) {
                 qrCodeInstance.clear();
@@ -236,22 +258,19 @@
             } else {
                 qrCodeInstance = new QRCode(qrcodeElement, {
                     text: accessData,
-                    width: 230,
-                    height: 230,
+                    width: 220,
+                    height: 220,
                     colorDark: "#000000",
                     colorLight: "#ffffff",
                     correctLevel: QRCode.CorrectLevel.H
                 });
             }
-
-            // Đặt lại bộ đếm về 00:00 khi tạo/làm mới QR
-            startCountUp();
         }
 
-        // Khởi tạo ban đầu
         updateTime();
         generateQRCode();
         setInterval(updateTime, 1000);
+        setInterval(updateTimer, 1000);
     </script>
 </body>
 
