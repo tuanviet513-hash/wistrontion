@@ -3,12 +3,14 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     
-    <!-- Cấu hình thanh trạng thái chữ/biểu tượng màu đen trên nền trắng -->
+    <!-- Cấu hình thanh trạng thái iOS màu trắng (cho Web App) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Cấu hình màu nền cho iOS Safari & Android Chrome -->
+    <meta name="theme-color" content="#1a1b26">
 
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
     <link rel="apple-touch-icon" href="icon.png">
@@ -16,74 +18,57 @@
     <style>
         * {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         html {
-            background-color: #ffffff;
-            color-scheme: light; /* Ép iOS hiển thị biểu tượng chữ/pin/wifi màu đen */
-            height: 100%;
+            background-color: #1a1b26;
+            color-scheme: dark; /* Báo cho iOS/Trình duyệt ưu tiên thanh trạng thái chữ/biểu tượng màu trắng */
         }
 
         body {
             margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100vh;
-            padding-top: env(safe-area-inset-top, 20px);
-            overflow-x: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
-            background-color: #232435;
-            background-image: radial-gradient(#313349 1px, transparent 1px), linear-gradient(180deg, #2a2b3d 0%, #1a1b26 100%);
-            background-size: 16px 16px, 100% 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-image: url("background.png");
+            background-color: #1d1d2b;
+            background-repeat: no-repeat;
             color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        /* Dải nền màu trắng đệm cho khu vực Status Bar */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: env(safe-area-inset-top, 20px);
-            background-color: #ffffff;
-            z-index: 9999;
+            padding: 0;
+            background-size: cover;
+            height: 100vh;
         }
 
         .header {
-            margin-top: 15px;
+            margin-top: 30px;
             font-size: 20px;
-            color: #d1b883;
-            font-weight: 400;
-            letter-spacing: 0.2px;
-        }
-
-        .card {
-            margin-top: 18px;
-            width: 75%;
-            max-width: 300px;
-            background: #ffffff;
-            border-radius: 4px;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
-
-        .card-header {
-            background-color: #f0bd38;
-            padding: 22px 10px;
-            text-align: center;
-            color: #ffffff;
-            font-size: 13.5px;
+            color: #edd185;
             font-weight: 400;
             letter-spacing: 0.5px;
         }
 
+        .card {
+            margin-top: 20px;
+            width: 75%;
+            max-width: 280px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            background-color: #f1bf42;
+            padding: 20px 10px;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
         .card-body {
-            padding: 16px 10px 18px 10px;
+            padding: 16px 10px;
             text-align: center;
             color: #000;
             position: relative;
@@ -91,41 +76,44 @@
 
         .time {
             font-size: 14px;
-            margin-bottom: 12px;
-            font-weight: 400;
-            color: #222222;
-            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #000;
+            letter-spacing: 0.5px;
         }
 
         #qrcode {
             margin: auto;
-            width: 220px;
-            height: 220px;
+            width: 230px;
+            height: 230px;
             image-rendering: pixelated;
         }
 
         #qrcode img {
-            width: 220px;
-            height: 220px;
+            width: 230px;
+            height: 230px;
         }
 
         .refresh {
-            margin-top: 10px;
+            margin-top: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11.5px;
-            color: #444444;
+            font-size: 12px;
+            color: #333;
         }
 
         .refresh-title {
             cursor: pointer;
             margin: 0;
-            padding: 2px 10px;
+            padding: 0 10px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .status-wrapper {
-            margin-top: 16px;
+            margin-top: 4px;
+            position: relative;
+            height: 38px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -133,44 +121,54 @@
         }
 
         .status-bg {
-            font-size: 16px;
-            color: #00cc66;
-            font-weight: 400;
-            line-height: 1.2;
+            position: absolute;
+            font-size: 18px;
+            color: #f5f5f5;
+            font-weight: bold;
+            z-index: 1;
+            user-select: none;
         }
 
         .status-timer {
+            position: relative;
+            z-index: 2;
             color: #00cc66;
             font-size: 16px;
-            font-weight: 400;
-            margin-top: 2px;
+            font-weight: bold;
         }
 
         .note {
-            margin: 32px 11%;
-            font-size: 12px;
-            color: #baaa82;
-            line-height: 1.65;
+            margin: 25px 10%;
+            font-size: 16px;
+            color: #d1c095;
+            line-height: 1.5;
             text-align: justify;
             text-justify: inter-ideograph;
-            letter-spacing: 0.2px;
         }
 
         .relative {
             position: relative;
         }
 
-        .circle1, .circle2 {
+        .circle1 {
             position: absolute;
-            background-color: #232435;
-            height: 12px;
-            width: 12px;
+            background-color: #26273b;
+            height: 10px;
+            width: 10px;
+            left: -5px;
             border-radius: 50%;
-            bottom: -6px;
+            bottom: -5px;
         }
 
-        .circle1 { left: -6px; }
-        .circle2 { right: -6px; }
+        .circle2 {
+            position: absolute;
+            background-color: #26273b;
+            height: 10px;
+            width: 10px;
+            right: -5px;
+            border-radius: 50%;
+            bottom: -5px;
+        }
     </style>
 </head>
 
@@ -203,7 +201,7 @@
 
     <script>
         let qrCodeInstance;
-        let totalSeconds = 48044;
+        let totalSeconds = 0;
 
         function pad(num) {
             return num < 10 ? '0' + num : num;
@@ -218,6 +216,10 @@
         function updateTimer() {
             totalSeconds++;
             
+            if (totalSeconds > 43200) {
+                totalSeconds = 43200;
+            }
+
             const hrs = Math.floor(totalSeconds / 3600);
             const mins = Math.floor((totalSeconds % 3600) / 60);
             const secs = totalSeconds % 60;
@@ -234,13 +236,23 @@
                 event.currentTarget.blur();
             }
 
+            totalSeconds = 0;
+            document.getElementById('countdown').textContent = "00:00";
+
             const now = new Date();
-            const formattedTime = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hours = pad(now.getHours());
+            const minutes = pad(now.getMinutes());
+            const seconds = pad(now.getSeconds());
+            const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
             const employeeId = "V25071461";
             const employeeName = "Nguyễn Tuấn Việt";
             const uniqueToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
-            const accessData = `https://Wistron.com/access?id=${employeeId}&name=${encodeURIComponent(employeeName)}&time=${encodeURIComponent(formattedTime)}&token=${uniqueToken}`;
+            const accessData =
+                `https://Wistron.com/access?id=${employeeId}&name=${encodeURIComponent(employeeName)}&time=${encodeURIComponent(formattedTime)}&token=${uniqueToken}`;
 
             const qrcodeElement = document.getElementById('qrcode');
             if (qrCodeInstance) {
@@ -249,8 +261,8 @@
             } else {
                 qrCodeInstance = new QRCode(qrcodeElement, {
                     text: accessData,
-                    width: 240,
-                    height: 240,
+                    width: 250,
+                    height: 250,
                     colorDark: "#000000",
                     colorLight: "#ffffff",
                     correctLevel: QRCode.CorrectLevel.H
