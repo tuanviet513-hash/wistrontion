@@ -155,14 +155,17 @@
         }
 
         .note {
-            margin: 32px 11%;
-            font-size: 16px;
-            color: #baaa82;
-            line-height: 1.65;
-            text-align: justify;
-            text-justify: inter-ideograph;
-            letter-spacing: 0.2px;
-        }
+  /* Thay 11% bằng padding/margin chính xác của thẻ màu trắng ở trên */
+  margin: 32px auto; 
+  width: 80%; /* Chỉnh % này sao cho bằng đúng độ rộng (width) của thẻ màu trắng */
+  font-size: 16px;
+  color: #baaa82;
+  line-height: 1.65;
+  text-align: justify;
+  text-justify: inter-ideograph;
+  letter-spacing: 0.2px;
+}
+
 
         .relative {
             position: relative;
