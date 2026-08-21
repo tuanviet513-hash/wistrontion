@@ -66,14 +66,19 @@
         }
 
         .card {
-            margin-top: 22px;
-            width: 80%;
-            max-width: 300px;
-            background: #ffffff;
-            border-radius: 4px;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        }
+    margin-top: 22px;
+    width: 80%;
+    max-width: 300px;
+    
+    /* Màu trắng tuyệt đối trùng khớp với nền QR */
+    background-color: #ffffff; 
+    
+    border-radius: 4px;
+    overflow: hidden;
+    
+    /* Giảm bóng đổ xuống tông tối dịu để không làm xỉn màu trắng của thẻ */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
 
         .card-header {
             background-color: #f0bd38;
